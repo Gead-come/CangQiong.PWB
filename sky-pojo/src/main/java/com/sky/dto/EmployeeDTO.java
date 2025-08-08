@@ -11,6 +11,8 @@ public class EmployeeDTO implements Serializable {
 
     private Long id;
 
+    private String idNumber;
+
     private String username;
 
     private String name;
@@ -19,6 +21,6 @@ public class EmployeeDTO implements Serializable {
 
     private String sex;
 
-    private String idNumber;
+
 
 }

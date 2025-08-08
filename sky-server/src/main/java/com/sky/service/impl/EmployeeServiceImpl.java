@@ -83,7 +83,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE); // 默认正常状态
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
-        //TODO:设置当前登录用户的ID
+
         // 从当前登录用户中(ThreadLocal)获取登陆人ID
         employee.setCreateUser(BaseContext.getCurrentId());  // 默认创建人
         employee.setUpdateUser(BaseContext.getCurrentId());   // 默认修改人
@@ -118,6 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void startOrStop(Integer status, Long id) {
+        // 1 创建一个员工对象
         Employee employee =Employee.builder()
                 .id( id)
                 .status( status)
@@ -125,6 +126,36 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .updateUser(BaseContext.getCurrentId())
                 .build();
         employeeMapper.update(employee);
+
+    }
+    /**
+     * 编辑员工信息
+     * 1 设置回显
+     * @param id
+     * @return
+     */
+
+    @Override
+    public Employee getById(Long id) {
+        return employeeMapper.getById(id);
+    }
+    /**
+     * 编辑员工信息
+     * 2 修改员工信息
+     * @param dst
+     * @return
+     */
+
+    @Override
+    public void update(EmployeeDTO dst) {
+        Employee employee = new Employee();
+        // 对象属性拷贝
+        BeanUtils.copyProperties(dst,employee);
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
+
+
 
     }
 
