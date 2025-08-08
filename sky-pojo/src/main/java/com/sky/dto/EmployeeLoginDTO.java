@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@ApiModel(description = "员工登录时传递的数据模型")
+@ApiModel(description = "员工登录时传递的数据模型")  //swagger 描述接口所属模块
 public class EmployeeLoginDTO implements Serializable {
 
     @ApiModelProperty("用户名")
