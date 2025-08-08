@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
+@Builder   // 创建链式编程
 @NoArgsConstructor
 @AllArgsConstructor
 
