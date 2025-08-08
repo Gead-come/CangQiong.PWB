@@ -1,6 +1,7 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
@@ -40,7 +41,7 @@ public class EmployeeController {
      * @param employeeLoginDTO
      * @return
      */
-    @ApiOperation( "员工登录")   //swagger 接口描述 作用在方法上
+    @ApiOperation("员工登录")   //swagger 接口描述 作用在方法上
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
@@ -70,14 +71,17 @@ public class EmployeeController {
      *
      * @return
      */
-    @ApiOperation( "员工退出")
+    @ApiOperation("员工退出")
     @PostMapping("/logout")
     public Result<String> logout() {
         return Result.success();
     }
-}
-@ApiOperation("新增员工")
-@PostMapping
-public Result addEmp(@RequestBody Employee dst){
 
+    @ApiOperation("新增员工")
+    @PostMapping
+    public Result addEmp(@RequestBody EmployeeDTO dst) {
+          log.info("新增员工: {}",dst);
+          employeeService.addEmp(dst);
+          return Result.success();
+    }
 }

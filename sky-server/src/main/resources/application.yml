@@ -20,14 +20,14 @@ mybatis:
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
-
-logging:
-  level:
-    com:
-      sky:
-        mapper: debug
-        service: info
-        controller: info
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#logging:
+#  level:
+#    com:
+#      sky:
+#        mapper: debug
+#        service: info
+#        controller: info
 
 sky:
   jwt:

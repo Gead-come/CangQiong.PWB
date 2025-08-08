@@ -1,7 +1,9 @@
 package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
@@ -9,10 +11,14 @@ import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.time.LocalDateTime;
+@Slf4j
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -53,6 +59,31 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //3、返回实体对象
         return employee;
+    }
+
+    /**
+     * 新增员工
+     * @param dst
+     */
+
+    @Override
+    public void addEmp(EmployeeDTO dst) {
+
+        Employee employee = new Employee();
+        // 对象属性拷贝
+        BeanUtils.copyProperties(dst,employee);
+        //1,补充：设置账号的状态，默认正常状态 1表示正常，0表示锁定，时间等
+
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD .getBytes()));
+        employee.setStatus(StatusConstant.ENABLE); // 默认正常状态
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        //TODO:设置当前登录用户的ID
+        employee.setCreateUser(10L);
+        employee.setUpdateUser(10L);
+        //调用mapper的新增方法，将员工对象存入employee表中
+        employeeMapper.insert(employee);
+
     }
 
 }
