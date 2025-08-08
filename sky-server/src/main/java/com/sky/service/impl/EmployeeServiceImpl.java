@@ -1,15 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -79,11 +84,29 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
         //TODO:设置当前登录用户的ID
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+        // 从当前登录用户中(ThreadLocal)获取登陆人ID
+        employee.setCreateUser(BaseContext.getCurrentId());  // 默认创建人
+        employee.setUpdateUser(BaseContext.getCurrentId());   // 默认修改人
         //调用mapper的新增方法，将员工对象存入employee表中
         employeeMapper.insert(employee);
 
+    }
+
+    /**
+     * 分页查询 -- 用分页插件
+     * @param dto
+     * @return
+     */
+    @Override
+    public PageResult page(EmployeePageQueryDTO dto) {
+        // 1 设置分页参数
+        PageHelper.startPage(dto.getPage(),dto.getPageSize());
+
+        // 2 调用mapper
+     Page<Employee>page =  employeeMapper.list(dto.getName());
+
+        // 3 封装PageResult并返回
+        return  new PageResult(page.getTotal(),page.getResult());
     }
 
 }
